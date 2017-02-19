@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,31 +41,41 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String oldField = sharedPreferences.getString("field", null);
         final String[] data = field.restore(oldField);
+        initFeild(data);
+        FloatingActionButton nextFab = (FloatingActionButton) findViewById(R.id.next_fab);
+        nextFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean fieldChanged = field.simpleCheck();
+                if (!fieldChanged) {
+                    Toast.makeText(context, "This is unique method", Toast.LENGTH_SHORT).show();
+                    field.proposalUniqueCheck();
+                }
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item, R.id.button, field.restore());
+                mainField.setAdapter(adapter);
+            }
+        });
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.sync_fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                field = new Field();
+                FieldManager.getInstance().setCurrentField(field);
+                initFeild(field.restore());
+            }
+        });
+    }
+
+    private void initFeild(String[] data) {
         mainField = (GridView) findViewById(R.id.main_field);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.item, R.id.button, data);
         mainField.setAdapter(adapter);
         mainField.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        mainField.setSelector(R.drawable.selector);
         mainField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
                 final int row = position / 9;
                 final int column = position % 9;
-                final EditText editText = new EditText(context);
-//                editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                builder.setView(editText)
-//                        .setNegativeButton("Cancel", null)
-//                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                String number = editText.getText().toString();
-//                                field.setNumber(row, column, Integer.valueOf(number));
-//                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item, R.id.button, field.restore());
-//                                mainField.setAdapter(adapter);
-//                            }
-//                        });
-//                builder.show();
                 SelectNumberDialogFragment selectNumberDialogFragment = new SelectNumberDialogFragment();
                 selectNumberDialogFragment.setOnNumberSelectListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -75,16 +86,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 selectNumberDialogFragment.show(getSupportFragmentManager(), "tag");
-            }
-        });
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                field.simpleCheck();
-                field.proposalUniqueCheck();
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item, R.id.button, field.restore());
-                mainField.setAdapter(adapter);
             }
         });
     }

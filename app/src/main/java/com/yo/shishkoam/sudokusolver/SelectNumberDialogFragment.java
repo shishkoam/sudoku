@@ -34,6 +34,7 @@ public class SelectNumberDialogFragment extends DialogFragment {
                 if (onNumberSelectListener != null) {
                     onNumberSelectListener.onItemClick(parent, view, position, id);
                 }
+                dismiss();
             }
         });
         getDialog().setTitle("Choose number:");

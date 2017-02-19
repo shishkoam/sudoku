@@ -89,15 +89,18 @@ public class Field {
         return builder.toString();
     }
 
-    public void simpleCheck() {
+    public boolean simpleCheck() {
+        boolean result = false;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 9; j++) {
                 int value = fieldItems[i][j].getValue();
                 if (value == 0) {
-                    setUpProposals(i, j);
+                    boolean valueSet = setUpProposals(i, j);
+                    result = valueSet || result;
                 }
             }
         }
+        return result;
     }
 
     private boolean setUpProposals(int i, int j) {
@@ -109,7 +112,7 @@ public class Field {
             }
         }
         if (item.setValue()) {
-            return item.setValue();
+            return true;
         }
         for (int k = 0; k < 9; k++) {
             int value = fieldItems[k][j].getValue();
@@ -118,7 +121,7 @@ public class Field {
             }
         }
         if (item.setValue()) {
-            return item.setValue();
+            return true;
         }
         int squareI = i / 3 * 3;
         int squareJ = j / 3 * 3;
@@ -135,13 +138,20 @@ public class Field {
 
     public void proposalUniqueCheck() {
         for (int k = 1; k <= 9; k++) {
-            checkProposalUniqueInRow(k);
-            checkProposalUniqueInColumn(k);
+            boolean result = checkProposalUniqueInRow(k);
+            if (result) {
+                continue;
+            }
+            result = checkProposalUniqueInColumn(k);
+            if (result) {
+                continue;
+            }
             checkProposalUniqueInSquares(k);
         }
     }
 
-    private void checkProposalUniqueInRow(int k) {
+    private boolean checkProposalUniqueInRow(int k) {
+        boolean result = false;
         ArrayList<Item> haveProposals = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             haveProposals.clear();
@@ -159,11 +169,14 @@ public class Field {
             }
             if (haveProposals.size() == 1) {
                 haveProposals.get(0).setValue(k);
+                result = true;
             }
         }
+        return result;
     }
 
-    private void checkProposalUniqueInColumn(int k) {
+    private boolean checkProposalUniqueInColumn(int k) {
+        boolean result = false;
         ArrayList<Item> haveProposals = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
             haveProposals.clear();
@@ -178,11 +191,14 @@ public class Field {
             }
             if (haveProposals.size() == 1) {
                 haveProposals.get(0).setValue(k);
+                result = true;
             }
         }
+        return result;
     }
 
-    private void checkProposalUniqueInSquares(int k) {
+    private boolean checkProposalUniqueInSquares(int k) {
+        boolean result = false;
         ArrayList<Item> haveProposals = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             j:
@@ -203,8 +219,10 @@ public class Field {
                 }
                 if (haveProposals.size() == 1) {
                     haveProposals.get(0).setValue(k);
+                    result = true;
                 }
             }
         }
+        return result;
     }
 }

@@ -15,17 +15,18 @@
     android:layout_marginBottom="?attr/actionBarSize">
 
     <GridView
+        android:padding="3dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/main_field"
         android:layout_gravity="center"
-        android:listSelector="@drawable/selector"
         android:numColumns="9"
         android:gravity="center"
-        android:verticalSpacing="1dp"
-        android:horizontalSpacing="1dp"
+        android:verticalSpacing="2dp"
+        android:horizontalSpacing="2dp"
         android:orientation="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:background="@drawable/sudoku_back"
      >
     </GridView>
 </LinearLayout>
