@@ -18,9 +18,9 @@
     <GridView
         android:padding="3dp"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:id="@+id/main_field"
+        android:background="#151515"
         android:layout_gravity="center"
         android:numColumns="9"
         android:gravity="center"
@@ -28,7 +28,7 @@
         android:horizontalSpacing="2dp"
         android:orientation="horizontal"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:background="@drawable/sudoku_back"
+
      >
     </GridView>
 

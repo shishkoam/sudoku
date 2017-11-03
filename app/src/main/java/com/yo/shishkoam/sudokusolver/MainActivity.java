@@ -4,13 +4,11 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -18,30 +16,20 @@ import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.squareup.picasso.Picasso;
-
-import org.openalpr.OpenALPR;
-import org.openalpr.model.Results;
-import org.openalpr.model.ResultsError;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -83,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         String oldField = sharedPreferences.getString("field", null);
         final String[] data = field.restore(oldField);
-        initFeild(data);
+        initFeild1(data);
         FloatingActionButton nextFab = (FloatingActionButton) findViewById(R.id.next_fab);
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 field = new Field();
                 FieldManager.getInstance().setCurrentField(field);
-                initFeild(field.restore());
+                initFeild1(field.restore());
             }
         });
 
@@ -145,6 +133,31 @@ public class MainActivity extends AppCompatActivity {
                 selectNumberDialogFragment.show(getSupportFragmentManager(), "tag");
             }
         });
+    }
+
+    private void initFeild1(String[] data) {
+        mainField = (GridView) findViewById(R.id.main_field);
+        mainField.setNumColumns(3);
+        GridArrayAdapter adapter = new GridArrayAdapter(this, data ,field);
+        mainField.setAdapter(adapter);
+        mainField.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+//        mainField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                final int row = position / 9;
+//                final int column = position % 9;
+//                SelectNumberDialogFragment selectNumberDialogFragment = new SelectNumberDialogFragment();
+//                selectNumberDialogFragment.setOnNumberSelectListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        field.setNumber(row, column, position);
+//                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, R.layout.item, R.id.button, field.restore());
+//                        mainField.setAdapter(adapter);
+//                    }
+//                });
+//                selectNumberDialogFragment.show(getSupportFragmentManager(), "tag");
+//            }
+//        });
     }
 
     @Override
@@ -189,46 +202,46 @@ public class MainActivity extends AppCompatActivity {
             // Picasso requires permission.WRITE_EXTERNAL_STORAGE
             Picasso.with(MainActivity.this).load(destination).fit().centerCrop().into(imageView);
             resultTextView.setText("Processing");
-
-            AsyncTask.execute(new Runnable() {
-                @Override
-                public void run() {
-                    String result = OpenALPR.Factory.create(MainActivity.this, ANDROID_DATA_DIR).recognizeWithCountryRegionNConfig("us", "", destination.getAbsolutePath(), openAlprConfFile, 10);
-
-                    Log.d("OPEN ALPR", result);
-
-                    try {
-                        final Results results = new Gson().fromJson(result, Results.class);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (results == null || results.getResults() == null || results.getResults().size() == 0) {
-                                    Toast.makeText(MainActivity.this, "It was not possible to detect the licence plate.", Toast.LENGTH_LONG).show();
-                                    resultTextView.setText("It was not possible to detect the licence plate.");
-                                } else {
-                                    resultTextView.setText("Plate: " + results.getResults().get(0).getPlate()
-                                            // Trim confidence to two decimal places
-                                            + " Confidence: " + String.format("%.2f", results.getResults().get(0).getConfidence()) + "%"
-                                            // Convert processing time to seconds and trim to two decimal places
-                                            + " Processing time: " + String.format("%.2f", ((results.getProcessingTimeMs() / 1000.0) % 60)) + " seconds");
-                                }
-                            }
-                        });
-
-                    } catch (JsonSyntaxException exception) {
-                        final ResultsError resultsError = new Gson().fromJson(result, ResultsError.class);
-
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                resultTextView.setText(resultsError.getMsg());
-                            }
-                        });
-                    }
-
-                    progress.dismiss();
-                }
-            });
+//
+//            AsyncTask.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    String result = OpenALPR.Factory.create(MainActivity.this, ANDROID_DATA_DIR).recognizeWithCountryRegionNConfig("us", "", destination.getAbsolutePath(), openAlprConfFile, 10);
+//
+//                    Log.d("OPEN ALPR", result);
+//
+//                    try {
+//                        final Results results = new Gson().fromJson(result, Results.class);
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (results == null || results.getResults() == null || results.getResults().size() == 0) {
+//                                    Toast.makeText(MainActivity.this, "It was not possible to detect the licence plate.", Toast.LENGTH_LONG).show();
+//                                    resultTextView.setText("It was not possible to detect the licence plate.");
+//                                } else {
+//                                    resultTextView.setText("Plate: " + results.getResults().get(0).getPlate()
+//                                            // Trim confidence to two decimal places
+//                                            + " Confidence: " + String.format("%.2f", results.getResults().get(0).getConfidence()) + "%"
+//                                            // Convert processing time to seconds and trim to two decimal places
+//                                            + " Processing time: " + String.format("%.2f", ((results.getProcessingTimeMs() / 1000.0) % 60)) + " seconds");
+//                                }
+//                            }
+//                        });
+//
+//                    } catch (JsonSyntaxException exception) {
+//                        final ResultsError resultsError = new Gson().fromJson(result, ResultsError.class);
+//
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                resultTextView.setText(resultsError.getMsg());
+//                            }
+//                        });
+//                    }
+//
+//                    progress.dismiss();
+//                }
+//            });
         }
     }
 
