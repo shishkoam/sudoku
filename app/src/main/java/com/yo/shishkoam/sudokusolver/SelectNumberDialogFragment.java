@@ -1,16 +1,16 @@
 package com.yo.shishkoam.sudokusolver;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Created by User on 13.02.2017 to save dialog during rotation
