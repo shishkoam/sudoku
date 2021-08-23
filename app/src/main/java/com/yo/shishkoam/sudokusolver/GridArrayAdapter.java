@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class GridArrayAdapter extends ArrayAdapter<String[]> {
     }
 
     public GridArrayAdapter(AppCompatActivity context, @NonNull String[] objects, Field field) {
-        super(context, R.layout.item_grid, R.id.button);
+        super(context, R.layout.item_grid, R.id.zero);
         this.activity = context;
         this.field = field;
         this.data = objects;
@@ -53,26 +54,30 @@ public class GridArrayAdapter extends ArrayAdapter<String[]> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         View v = View.inflate(getContext(), R.layout.item_grid, null);
         final GridView mainField = (GridView) v.findViewById(R.id.first_field);
-        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.item_grid, R.id.button, datasets.get(position));
+        String[] s = datasets.get(position);
+        for (int i = 0; i < s.length; i++) {
+            if (s[i] == null) s[i] = " ";
+        }
+        ArrayAdapter adapter = new ArrayAdapter<String>(getContext(), R.layout.item_grid, R.id.zero, datasets.get(position));
         mainField.setAdapter(adapter);
-        mainField.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-        mainField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int pos, long id) {
-                    final int row = (position *3 + pos) / 9;
-                    final int column = (position *3 + pos) % 9;
-                    SelectNumberDialogFragment selectNumberDialogFragment = new SelectNumberDialogFragment();
-                    selectNumberDialogFragment.setOnNumberSelectListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            field.setNumber(row, column, pos);
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item, R.id.button, field.restore());
-                            mainField.setAdapter(adapter);
-                        }
-                    });
-            selectNumberDialogFragment.show(activity.getSupportFragmentManager(), "tag");
-                }
-            });
+//        mainField.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
+//        mainField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(AdapterView<?> parent, View view, final int pos, long id) {
+//                    final int row = (position *3 + pos) / 9;
+//                    final int column = (position *3 + pos) % 9;
+//                    SelectNumberDialogFragment selectNumberDialogFragment = new SelectNumberDialogFragment();
+//                    selectNumberDialogFragment.setOnNumberSelectListener(new AdapterView.OnItemClickListener() {
+//                        @Override
+//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                            field.setNumber(row, column, pos);
+//                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item, R.id.button, field.restore());
+//                            mainField.setAdapter(adapter);
+//                        }
+//                    });
+//            selectNumberDialogFragment.show(activity.getSupportFragmentManager(), "tag");
+//                }
+//            });
         return v;
     }
 

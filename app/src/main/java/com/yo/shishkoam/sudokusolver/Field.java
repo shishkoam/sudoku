@@ -41,25 +41,39 @@ public class Field {
     }
 
     public String[] restore(String fieldString) {
-        if (fieldString == null) {
-            return new String[]{" ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " ",
-                    " ", " ", " ", " ", " ", " ", " ", " ", " "};
-        }
+//        if (fieldString == null) {
+//            if (true) {
+//            return new String[]{"4", " ", "7", " ", " ", " ", " ", " ", " ",
+//                                " ", "1", "2", "8", " ", " ", " ", "7", "4",
+//                                " ", " ", "9", " ", " ", "7", " ", " ", " ",
+//                                " ", " ", " ", "5", "7", "1", " ", " ", " ",
+//                                "1", "2", " ", "9", "8", "4", "7", "3", " ",
+//                                "7", " ", " ", " ", " ", "2", "1", " ", " ",
+//                                " ", "7", " ", " ", " ", "8", "3", " ", " ",
+//                                "2", "4", "1", "7", "9", "3", "5", "6", "8",
+//                                "9", " ", " ", " ", "5", "6", "4", " ", "7"};
+//        }
         String[] result = new String[81];
-        char[] field = fieldString.toCharArray();
+
+        String[] field =  new String[]{"4", " ", "7", " ", " ", " ", " ", " ", " ",
+                " ", "1", "2", "8", " ", " ", " ", "7", "4",
+                " ", " ", "9", " ", " ", "7", " ", " ", " ",
+                " ", " ", " ", "5", "7", "1", " ", " ", " ",
+                "1", "2", " ", "9", "8", "4", "7", "3", " ",
+                "7", " ", " ", " ", " ", "2", "1", " ", " ",
+                " ", "7", " ", " ", " ", "8", "3", " ", " ",
+                "2", "4", "1", "7", "9", "3", "5", "6", "8",
+                "9", " ", " ", " ", "5", "6", "4", " ", "7"};;
         for (int i = 0; i < 9; i++) {
             int currentRow = i * 9;
             for (int j = 0; j < 9; j++) {
                 Item item = new Item(i, j);
                 String ch = String.valueOf(field[currentRow + j]);
-                item.setValue(Integer.valueOf(ch));
+                if (ch.equals(" ")) {
+                    item.setValue(0);
+                } else {
+                    item.setValue(Integer.parseInt(ch));
+                }
                 fieldItems[i][j] = item;
                 result[currentRow + j] = (!ch.equals("0")) ? ch : "";
             }
@@ -132,7 +146,7 @@ public class Field {
                     item.removeProposals(value);
                 }
             }
-        }
+        } 
         return item.setValue();
     }
 

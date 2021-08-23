@@ -26,7 +26,7 @@ public class SelectNumberDialogFragment extends DialogFragment {
         View content = inflater.inflate(R.layout.set_number_dialog, null);
         GridView mainField = (GridView) content.findViewById(R.id.main_field);
         final String[] data = {"<-","1","2","3","4","5","6","7","8","9"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item, R.id.button, data);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.item, data);
         mainField.setAdapter(adapter);
         mainField.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
